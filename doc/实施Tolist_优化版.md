@@ -73,13 +73,13 @@
 
 ### 🎯 Milestone 6 ｜可配置 & 可扩展（Day 5-6）
 
-- [ ] 6.1 支持自定义主题：在 `RationaleHandler` 暴露 `themeResId` 参数
-- [ ] 6.2 支持自定义解释 UI：允许接入外部 DialogFragment / BottomSheet
-- [ ] 6.3 支持全局默认配置：
+- [x] 6.1 支持自定义主题：在 `RationaleHandler` 暴露 `themeResId` 参数
+- [x] 6.2 支持自定义解释 UI：允许接入外部 DialogFragment / BottomSheet
+- [x] 6.3 支持全局默认配置：
   – 默认解释文案、跳转设置按钮文案、是否强制跳转设置
   – **多语言支持（i18n）**
-- [ ] 6.4 提供 SPI 接口：其他模块可注册 `PermissionInterceptor` 做埋点 / 日志 / 灰度
-- [ ] **6.5 添加权限请求频率限制：防止恶意频繁申请**
+- [x] 6.4 提供 SPI 接口：其他模块可注册 `PermissionInterceptor` 做埋点 / 日志 / 灰度
+- [x] **6.5 添加权限请求频率限制：防止恶意频繁申请**
 
 ------
 

@@ -44,6 +44,9 @@ dependencies {
     implementation("androidx.activity:activity-ktx:1.8.2")
     implementation("androidx.fragment:fragment-ktx:1.6.2")
     
+    // Material Design（可选，用于BottomSheet支持）
+    compileOnly("com.google.android.material:material:1.11.0")
+    
     // 测试依赖
     testImplementation("junit:junit:4.13.2")
     testImplementation("org.mockito:mockito-core:5.7.0")
