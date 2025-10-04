@@ -49,14 +49,14 @@
 
 ### 🎯 Milestone 4 ｜多权限 & 批量拒绝场景（Day 3-4）
 
-- [ ] 4.1 封装 `MultiplePermissionContract`（ActivityResultContract<Array<String>, Map<String,Boolean>>）
-- [ ] 4.2 设计结果聚合策略：
+- [x] 4.1 封装 `MultiplePermissionContract`（ActivityResultContract<Array<String>, Map<String,Boolean>>）
+- [x] 4.2 设计结果聚合策略：
   – 全部 granted → onGranted
   – 部分拒绝 → onDenied(拒绝列表)
   – 只要有一个永久拒绝 → 额外回调 onPermanentlyDenied
-- [ ] **4.3 支持权限依赖关系：某些权限必须同时授权才有意义**
-- [ ] 4.4 Demo 新增 `LocationActivity`：一次性请求 ACCESS_FINE_LOCATION + BACKGROUND_LOCATION
-- [ ] 4.5 自动化测试：Espresso 点击"仅允许前台"→ 断言后台权限进入永久拒绝路径
+- [x] **4.3 支持权限依赖关系：某些权限必须同时授权才有意义**
+- [x] 4.4 Demo 新增 `LocationActivity`：一次性请求 ACCESS_FINE_LOCATION + BACKGROUND_LOCATION
+- [x] 4.5 自动化测试：Espresso 点击"仅允许前台"→ 断言后台权限进入永久拒绝路径
 
 ------
 

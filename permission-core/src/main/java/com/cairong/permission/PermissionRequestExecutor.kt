@@ -228,28 +228,29 @@ class PermissionRequestExecutor {
     private fun handleMultiplePermissionsResult(permissions: Map<String, Boolean>) {
         val request = currentRequest ?: return
         
-        val grantedPermissions = permissions.filter { it.value }.keys.toTypedArray()
-        val deniedPermissions = permissions.filter { !it.value }.keys.toTypedArray()
-        
-        if (grantedPermissions.size == permissions.size) {
-            // 所有权限都已授权
-            request.callback?.onGranted(grantedPermissions)
+        // 使用结果聚合器处理多权限结果
+        val aggregator = PermissionResultAggregator()
+        val aggregatedResult = if (fragment != null) {
+            aggregator.aggregateResults(fragment, request.permissions, permissions)
         } else {
-            // 检查被拒绝的权限中哪些是永久拒绝
-            val permanentlyDeniedPermissions = if (fragment != null) {
-                PermissionStateChecker.getPermanentlyDeniedPermissions(fragment, deniedPermissions)
+            aggregator.aggregateResults(context, request.permissions, permissions)
+        }
+        
+        if (aggregatedResult.allGranted) {
+            // 所有权限都已授权
+            request.callback?.onGranted(aggregatedResult.grantedPermissions)
+        } else {
+            // 有权限被拒绝
+            if (aggregatedResult.hasPermanentlyDeniedPermissions) {
+                handlePermanentlyDenied(
+                    aggregatedResult.permanentlyDeniedPermissions,
+                    aggregatedResult.temporarilyDeniedPermissions
+                )
             } else {
-                PermissionStateChecker.getPermanentlyDeniedPermissions(context, deniedPermissions)
-            }
-            
-            val temporarilyDeniedPermissions = deniedPermissions.filter { permission ->
-                !permanentlyDeniedPermissions.contains(permission)
-            }.toTypedArray()
-            
-            if (permanentlyDeniedPermissions.isNotEmpty()) {
-                handlePermanentlyDenied(permanentlyDeniedPermissions, temporarilyDeniedPermissions)
-            } else {
-                request.callback?.onDenied(temporarilyDeniedPermissions, emptyArray())
+                request.callback?.onDenied(
+                    aggregatedResult.temporarilyDeniedPermissions,
+                    emptyArray()
+                )
             }
         }
     }

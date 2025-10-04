@@ -57,6 +57,42 @@ class PermissionRequestBuilder internal constructor(
     }
     
     /**
+     * 添加权限组
+     */
+    fun permissionGroup(group: Array<String>): PermissionRequestBuilder {
+        this.permissions.addAll(group)
+        return this
+    }
+    
+    /**
+     * 添加位置权限组
+     */
+    fun locationPermissions(): PermissionRequestBuilder {
+        return permissionGroup(PermissionGroups.LOCATION_PERMISSIONS)
+    }
+    
+    /**
+     * 添加存储权限组
+     */
+    fun storagePermissions(): PermissionRequestBuilder {
+        return permissionGroup(PermissionGroups.STORAGE_PERMISSIONS)
+    }
+    
+    /**
+     * 添加媒体权限组（Android 13+）
+     */
+    fun mediaPermissions(): PermissionRequestBuilder {
+        return permissionGroup(PermissionGroups.MEDIA_PERMISSIONS_ANDROID_13)
+    }
+    
+    /**
+     * 添加相机和音频权限组
+     */
+    fun cameraAndAudioPermissions(): PermissionRequestBuilder {
+        return permissionGroup(PermissionGroups.CAMERA_AND_AUDIO_PERMISSIONS)
+    }
+    
+    /**
      * 设置权限解释文案
      */
     fun rationale(rationale: String): PermissionRequestBuilder {
