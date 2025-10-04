@@ -21,15 +21,41 @@
 
 ### 集成方式
 
-在项目的 `build.gradle` 中添加依赖：
+#### Step 1: 添加 JitPack 仓库
+
+在项目根目录的 `build.gradle` 或 `settings.gradle` 中添加 JitPack 仓库：
+
+```gradle
+// settings.gradle (推荐)
+dependencyResolutionManagement {
+    repositories {
+        google()
+        mavenCentral()
+        maven { url 'https://jitpack.io' }
+    }
+}
+
+// 或者在项目根目录的 build.gradle
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+        maven { url 'https://jitpack.io' }
+    }
+}
+```
+
+#### Step 2: 添加依赖
+
+在应用模块的 `build.gradle` 中添加依赖：
 
 ```gradle
 dependencies {
     // 核心库（必需）
-    implementation 'com.cairong.permission:permission-core:1.0.0'
+    implementation 'com.github.cairong.android-permission-framework:permission-core:1.0.0'
     
     // 协程扩展（可选）
-    implementation 'com.cairong.permission:permission-coroutine:1.0.0'
+    implementation 'com.github.cairong.android-permission-framework:permission-coroutine:1.0.0'
 }
 ```
 

@@ -1,0 +1,113 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+        
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        
+    - name: Cache Gradle packages
+      uses: actions/cache@v3
+      with:
+        path: |
+          ~/.gradle/caches
+          ~/.gradle/wrapper
+        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+        restore-keys: |
+          ${{ runner.os }}-gradle-
+          
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
+      
+    - name: Extract version from tag
+      id: get_version
+      run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+      
+    - name: Update version in build files
+      run: |
+        sed -i "s/version = \".*\"/version = \"${{ steps.get_version.outputs.VERSION }}\"/" permission-core/build.gradle.kts
+        sed -i "s/version = \".*\"/version = \"${{ steps.get_version.outputs.VERSION }}\"/" permission-coroutine/build.gradle.kts
+        
+    - name: Run tests
+      run: ./gradlew test
+      
+    - name: Build release
+      run: ./gradlew assembleRelease
+      
+    - name: Generate documentation
+      run: ./gradlew dokkaHtml
+      
+    - name: Build demo APK
+      run: ./gradlew :demo:assembleRelease
+      
+    - name: Generate performance report
+      run: |
+        echo "# 性能报告" > performance-report.md
+        echo "版本: ${{ steps.get_version.outputs.VERSION }}" >> performance-report.md
+        echo "构建时间: $(date)" >> performance-report.md
+        echo "" >> performance-report.md
+        echo "## 包大小" >> performance-report.md
+        echo "- 核心库: $(du -h permission-core/build/outputs/aar/permission-core-release.aar | cut -f1)" >> performance-report.md
+        echo "- 协程库: $(du -h permission-coroutine/build/outputs/aar/permission-coroutine-release.aar | cut -f1)" >> performance-report.md
+        echo "- 演示应用: $(du -h demo/build/outputs/apk/release/demo-release-unsigned.apk | cut -f1)" >> performance-report.md
+        
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ steps.get_version.outputs.VERSION }}
+        body_path: performance-report.md
+        draft: false
+        prerelease: false
+        
+    - name: Upload Core AAR
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: permission-core/build/outputs/aar/permission-core-release.aar
+        asset_name: permission-core-${{ steps.get_version.outputs.VERSION }}.aar
+        asset_content_type: application/octet-stream
+        
+    - name: Upload Coroutine AAR
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: permission-coroutine/build/outputs/aar/permission-coroutine-release.aar
+        asset_name: permission-coroutine-${{ steps.get_version.outputs.VERSION }}.aar
+        asset_content_type: application/octet-stream
+        
+    - name: Upload Demo APK
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: demo/build/outputs/apk/release/demo-release-unsigned.apk
+        asset_name: permission-demo-${{ steps.get_version.outputs.VERSION }}.apk
+        asset_content_type: application/vnd.android.package-archive
+        
+    - name: Publish to JitPack
+      run: |
+        echo "JitPack will automatically build from this tag"
+        echo "Repository: https://jitpack.io/#cairong/android-permission-framework/${{ steps.get_version.outputs.VERSION }}"

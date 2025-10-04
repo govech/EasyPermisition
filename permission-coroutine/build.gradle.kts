@@ -92,9 +92,9 @@ val dokkaJar by tasks.registering(Jar::class) {
 publishing {
     publications {
         register<MavenPublication>("release") {
-            groupId = "com.cairong.permission"
+            groupId = "com.github.cairong"
             artifactId = "permission-coroutine"
-            version = "1.0.0"
+            version = project.version.toString()
             
             afterEvaluate {
                 from(components["release"])
