@@ -62,12 +62,12 @@
 
 ### 🎯 Milestone 5 ｜Java 兼容 & 协程扩展（Day 4-5）
 
-- [ ] 5.1 新增 `PermissionManager.java` 同名门面，提供静态方法供 Java 链式调用
-- [ ] 5.2 新增 `permission-coroutine` module，提供：
+- [x] 5.1 新增 `PermissionManager.java` 同名门面，提供静态方法供 Java 链式调用
+- [x] 5.2 新增 `permission-coroutine` module，提供：
   – `suspend fun PermissionRequest.await()`
   – **`Flow<PermissionState>` 支持权限状态监听**
-- [ ] 5.3 Sample 分别用 Java 与 Kotlin-Coroutine 各写一个请求示例
-- [ ] 5.4 API 稳定性评审：@JvmOverloads / @JvmStatic 检查无遗漏
+- [x] 5.3 Sample 分别用 Java 与 Kotlin-Coroutine 各写一个请求示例
+- [x] 5.4 API 稳定性评审：@JvmOverloads / @JvmStatic 检查无遗漏
 
 ------
 

@@ -6,7 +6,7 @@
     <string name="main_title">Android权限请求框架演示</string>
     <string name="btn_camera_demo">相机权限演示</string>
     <string name="btn_location_demo">位置权限演示</string>
-    <string name="btn_multiple_demo">多权限演示</string>
+    <string name="btn_multiple_demo">Kotlin协程演示</string>
     <string name="btn_java_demo">Java调用演示</string>
     
     <!-- 相机页面 -->

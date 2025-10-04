@@ -195,6 +195,35 @@ class PermissionRequestBuilder internal constructor(
     }
     
     /**
+     * 设置Java友好的权限回调
+     */
+    fun onJavaCallback(callback: com.cairong.permission.java.JavaPermissionCallback): PermissionRequestBuilder {
+        this.onBeforeRequestCallback = { permissions -> callback.onBeforeRequest(permissions) }
+        this.onGrantedCallback = { permissions -> callback.onGranted(permissions) }
+        this.onDeniedCallback = { deniedPermissions, permanentlyDeniedPermissions ->
+            callback.onDenied(deniedPermissions, permanentlyDeniedPermissions)
+        }
+        this.onPermanentlyDeniedCallback = { permanentlyDeniedPermissions ->
+            callback.onPermanentlyDenied(permanentlyDeniedPermissions)
+        }
+        return this
+    }
+    
+    /**
+     * 设置Java友好的简化回调
+     */
+    fun onJavaResult(callback: com.cairong.permission.java.SimpleJavaPermissionCallback): PermissionRequestBuilder {
+        this.onGrantedCallback = { grantedPermissions ->
+            callback.onResult(true, grantedPermissions, emptyArray())
+        }
+        this.onDeniedCallback = { deniedPermissions, permanentlyDeniedPermissions ->
+            val allDenied = deniedPermissions + permanentlyDeniedPermissions
+            callback.onResult(false, emptyArray(), allDenied)
+        }
+        return this
+    }
+    
+    /**
      * 设置自定义权限解释处理器
      */
     fun rationaleHandler(handler: RationaleHandler): PermissionRequestBuilder {

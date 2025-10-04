@@ -44,6 +44,16 @@
             android:name=".LocationActivity"
             android:exported="false" />
             
+        <!-- Java演示Activity -->
+        <activity
+            android:name=".JavaDemoActivity"
+            android:exported="false" />
+            
+        <!-- 协程演示Activity -->
+        <activity
+            android:name=".CoroutineDemoActivity"
+            android:exported="false" />
+            
     </application>
 
 </manifest>

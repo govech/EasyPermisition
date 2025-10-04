@@ -32,11 +32,11 @@ class MainActivity : AppCompatActivity() {
         }
         
         binding.btnMultipleDemo.setOnClickListener {
-            // TODO: 实现多权限演示
+            startActivity(Intent(this, CoroutineDemoActivity::class.java))
         }
         
         binding.btnJavaDemo.setOnClickListener {
-            // TODO: 实现Java调用演示
+            startActivity(Intent(this, JavaDemoActivity::class.java))
         }
     }
 }

@@ -44,6 +44,7 @@ android {
 dependencies {
     // 权限框架
     implementation(project(":permission-core"))
+    implementation(project(":permission-coroutine"))
     
     // Android基础库
     implementation("androidx.core:core-ktx:1.12.0")

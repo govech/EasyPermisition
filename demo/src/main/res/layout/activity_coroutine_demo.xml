@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Kotlin协程权限请求演示"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:layout_marginBottom="24dp" />
+
+    <TextView
+        android:id="@+id/tvStatus"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Kotlin协程权限请求演示\n点击按钮测试不同的协程权限请求方式"
+        android:textSize="14sp"
+        android:gravity="center"
+        android:layout_marginBottom="16dp"
+        android:minHeight="120dp"
+        android:background="@android:color/background_light"
+        android:padding="16dp" />
+
+    <Button
+        android:id="@+id/btnRequestSingle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="协程请求单个权限（相机）"
+        android:layout_marginBottom="16dp" />
+
+    <Button
+        android:id="@+id/btnRequestMultiple"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="协程请求多个权限（相机+麦克风）"
+        android:layout_marginBottom="16dp" />
+
+    <Button
+        android:id="@+id/btnRequestDetailed"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="协程详细结果演示（位置权限）"
+        android:layout_marginBottom="16dp" />
+
+    <Button
+        android:id="@+id/btnObserveState"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="观察权限状态变化（Flow）"
+        android:layout_marginBottom="16dp" />
+
+</LinearLayout>
