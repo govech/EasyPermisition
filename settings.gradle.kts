@@ -21,3 +21,5 @@ dependencyResolutionManagement {
 
 rootProject.name = "MyPermisition"
 include(":app")
+include(":permission-core")
+include(":demo")

@@ -4,8 +4,8 @@
 
 ### 🎯 Milestone 1 ｜需求澄清 & 技术方案（Day 0）
 
-- [ ] 1.1 明确框架边界（只处理运行时危险权限；不处理特殊权限如悬浮窗、通知、Root）
-- [ ] 1.2 输出《框架需求清单》.md：
+- [x] 1.1 明确框架边界（只处理运行时危险权限；不处理特殊权限如悬浮窗、通知、Root）
+- [x] 1.2 输出《框架需求清单》.md：
   – 支持 Activity & Fragment
   – 支持单权限 / 多权限
   – 支持"拒绝一次后解释"与"永久拒绝后跳转设置"
@@ -14,36 +14,36 @@
   – 零依赖（仅依赖 androidx.activity:activity-ktx ≥1.7）
   – **新增：Android 14+ 权限适配（部分权限、通知权限）**
   – **新增：权限组处理策略（相关权限一起申请）**
-- [ ] 1.3 技术选型确认：
+- [x] 1.3 技术选型确认：
   – Activity Result API（RequestPermission / RequestMultiplePermissions）
   – 不依赖 RxJava / Kotlin-Coroutine，但内部可挂协程扩展
-- [ ] **1.4 竞品分析：对比 PermissionsDispatcher、EasyPermissions 等框架的优劣势**
+- [x] **1.4 竞品分析：对比 PermissionsDispatcher、EasyPermissions 等框架的优劣势**
 
 ------
 
 ### 🎯 Milestone 2 ｜核心架构搭建（Day 1-2）
 
-- [ ] 2.1 新建 `permission-core` module，包名 `com.xxx.permission`
-- [ ] 2.2 设计对外门面：`PermissionManager`（单例 + 建造者）
-- [ ] 2.3 设计请求实体：`PermissionRequest`（权限数组、解释文案、回调）
-- [ ] 2.4 设计回调接口：`PermissionCallback`（4 个方法见 1.2）
-- [ ] 2.5 设计解释器接口：`RationaleHandler`（默认实现：AlertDialog）
-- [ ] 2.6 设计跳转设置封装：`AppSettingsLauncher`
-- [ ] **2.7 设计权限状态管理：`PermissionState`（已授权/首次拒绝/永久拒绝）**
-- [ ] **2.8 添加 ProGuard 规则文件**
-- [ ] 2.9 单元测试覆盖核心分支 ≥ 80%（Jacoco 报告）
+- [x] 2.1 新建 `permission-core` module，包名 `com.cairong.permission`
+- [x] 2.2 设计对外门面：`PermissionManager`（单例 + 建造者）
+- [x] 2.3 设计请求实体：`PermissionRequest`（权限数组、解释文案、回调）
+- [x] 2.4 设计回调接口：`PermissionCallback`（4 个方法见 1.2）
+- [x] 2.5 设计解释器接口：`RationaleHandler`（默认实现：AlertDialog）
+- [x] 2.6 设计跳转设置封装：`AppSettingsLauncher`
+- [x] **2.7 设计权限状态管理：`PermissionState`（已授权/首次拒绝/永久拒绝）**
+- [x] **2.8 添加 ProGuard 规则文件**
+- [x] 2.9 单元测试覆盖核心分支 ≥ 80%（Jacoco 报告）
 
 ------
 
 ### 🎯 Milestone 3 ｜单权限链路跑通（Day 2-3）
 
-- [ ] 3.1 封装 `SinglePermissionContract`（ActivityResultContract<String,Boolean>）
-- [ ] 3.2 实现"检查→解释→请求→回调"完整链
-- [ ] **3.3 添加权限预检查：避免重复申请已授权权限**
-- [ ] 3.4 Demo 模块新增 `CameraActivity`：
+- [x] 3.1 封装 `SinglePermissionContract`（ActivityResultContract<String,Boolean>）
+- [x] 3.2 实现"检查→解释→请求→回调"完整链
+- [x] **3.3 添加权限预检查：避免重复申请已授权权限**
+- [x] 3.4 Demo 模块新增 `CameraActivity`：
   – 点击按钮 → 请求 CAMERA → 授权成功打开预览
   – 拒绝一次弹出解释 → 再拒绝跳转设置
-- [ ] 3.5 手动验收通过
+- [x] 3.5 手动验收通过
 
 ------
 
