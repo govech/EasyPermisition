@@ -20,7 +20,7 @@ jobs:
         distribution: 'temurin'
         
     - name: Cache Gradle packages
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: |
           ~/.gradle/caches
@@ -48,7 +48,7 @@ jobs:
       run: ./gradlew jacocoTestReport
       
     - name: Upload test results
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       if: always()
       with:
         name: test-results
@@ -57,13 +57,13 @@ jobs:
           **/build/reports/jacoco/
           
     - name: Upload APK
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: demo-apk
         path: demo/build/outputs/apk/debug/demo-debug.apk
         
     - name: Upload AAR
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: library-aar
         path: |
@@ -86,7 +86,7 @@ jobs:
         distribution: 'temurin'
         
     - name: Cache Gradle packages
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: |
           ~/.gradle/caches
@@ -105,7 +105,7 @@ jobs:
         sudo udevadm trigger --name-match=kvm
         
     - name: AVD cache
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       id: avd-cache
       with:
         path: |
@@ -145,7 +145,7 @@ jobs:
         distribution: 'temurin'
         
     - name: Cache Gradle packages
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: |
           ~/.gradle/caches
@@ -161,7 +161,7 @@ jobs:
       run: ./gradlew dependencyCheckAnalyze
       
     - name: Upload security report
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       if: always()
       with:
         name: security-report
