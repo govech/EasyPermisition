@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Android 14+ 权限适配演示"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:layout_marginBottom="16dp" />
+
+        <TextView
+            android:id="@+id/tvVersionInfo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="当前 Android 版本：检测中..."
+            android:textSize="14sp"
+            android:textColor="#666666"
+            android:gravity="center"
+            android:layout_marginBottom="32dp" />
+
+        <!-- 部分媒体权限 (Android 14+) -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="部分媒体权限 (Android 14+)"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:id="@+id/tvPartialMediaNote"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="检测中..."
+            android:textSize="12sp"
+            android:textColor="#666666"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="允许用户选择部分媒体文件而不是全部媒体文件"
+            android:textSize="12sp"
+            android:textColor="#666666"
+            android:layout_marginBottom="8dp" />
+
+        <Button
+            android:id="@+id/btnRequestPartialMedia"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="请求部分媒体权限"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:id="@+id/tvPartialMediaStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="状态：未请求"
+            android:textSize="14sp"
+            android:layout_marginBottom="24dp" />
+
+        <!-- 通知权限 (Android 13+) -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="通知权限 (Android 13+)"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:id="@+id/tvNotificationNote"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="检测中..."
+            android:textSize="12sp"
+            android:textColor="#666666"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="POST_NOTIFICATIONS 权限，控制应用是否可以发送通知"
+            android:textSize="12sp"
+            android:textColor="#666666"
+            android:layout_marginBottom="8dp" />
+
+        <Button
+            android:id="@+id/btnRequestNotification"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="请求通知权限"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:id="@+id/tvNotificationStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="状态：未请求"
+            android:textSize="14sp"
+            android:layout_marginBottom="24dp" />
+
+        <!-- 前台服务权限 (Android 14+) -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="前台服务权限 (Android 14+)"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:id="@+id/tvForegroundServiceNote"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="检测中..."
+            android:textSize="12sp"
+            android:textColor="#666666"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="前台服务需要声明特定类型权限：位置、相机、麦克风等"
+            android:textSize="12sp"
+            android:textColor="#666666"
+            android:layout_marginBottom="8dp" />
+
+        <Button
+            android:id="@+id/btnRequestForegroundService"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="请求前台服务权限"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:id="@+id/tvForegroundServiceStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="状态：未请求"
+            android:textSize="14sp"
+            android:layout_marginBottom="24dp" />
+
+        <!-- 精确闹钟权限 (Android 12+) -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="精确闹钟权限 (Android 12+)"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:id="@+id/tvExactAlarmNote"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="检测中..."
+            android:textSize="12sp"
+            android:textColor="#666666"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="SCHEDULE_EXACT_ALARM 权限，需要用户在设置中手动开启"
+            android:textSize="12sp"
+            android:textColor="#666666"
+            android:layout_marginBottom="8dp" />
+
+        <Button
+            android:id="@+id/btnRequestExactAlarm"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="查看精确闹钟权限"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:id="@+id/tvExactAlarmStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="状态：未检查"
+            android:textSize="14sp"
+            android:layout_marginBottom="24dp" />
+
+    </LinearLayout>
+
+</ScrollView>

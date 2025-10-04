@@ -9,6 +9,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.cairong.permission.PermissionManager;
 import com.cairong.permission.java.JavaPermissionCallback;
 import com.cairong.permission.java.JavaPermissionManager;
 import com.cairong.permission.java.SimpleJavaPermissionCallback;
@@ -31,6 +32,9 @@ public class JavaDemoActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_java_demo);
+        
+        // 初始化权限管理器
+        PermissionManager.initialize(this);
         
         initViews();
         setupClickListeners();

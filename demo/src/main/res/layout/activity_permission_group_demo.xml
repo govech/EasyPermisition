@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="权限组批量申请演示"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:layout_marginBottom="32dp" />
+
+        <!-- 存储权限组 -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="存储权限组"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="包含：READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE"
+            android:textSize="12sp"
+            android:textColor="#666666"
+            android:layout_marginBottom="8dp" />
+
+        <Button
+            android:id="@+id/btnRequestStorageGroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="请求存储权限组"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:id="@+id/tvStorageStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="状态：未请求"
+            android:textSize="14sp"
+            android:layout_marginBottom="24dp" />
+
+        <!-- 位置权限组 -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="位置权限组"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="包含：ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION, ACCESS_BACKGROUND_LOCATION"
+            android:textSize="12sp"
+            android:textColor="#666666"
+            android:layout_marginBottom="8dp" />
+
+        <Button
+            android:id="@+id/btnRequestLocationGroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="请求位置权限组"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:id="@+id/tvLocationStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="状态：未请求"
+            android:textSize="14sp"
+            android:layout_marginBottom="24dp" />
+
+        <!-- 媒体权限组 (Android 13+) -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="媒体权限组 (Android 13+)"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="包含：READ_MEDIA_IMAGES, READ_MEDIA_VIDEO, READ_MEDIA_AUDIO"
+            android:textSize="12sp"
+            android:textColor="#666666"
+            android:layout_marginBottom="8dp" />
+
+        <Button
+            android:id="@+id/btnRequestMediaGroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="请求媒体权限组"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:id="@+id/tvMediaStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="状态：未请求"
+            android:textSize="14sp"
+            android:layout_marginBottom="24dp" />
+
+        <!-- 传感器权限组 -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="传感器权限组"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="包含：BODY_SENSORS, ACTIVITY_RECOGNITION"
+            android:textSize="12sp"
+            android:textColor="#666666"
+            android:layout_marginBottom="8dp" />
+
+        <Button
+            android:id="@+id/btnRequestSensorGroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="请求传感器权限组"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:id="@+id/tvSensorStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="状态：未请求"
+            android:textSize="14sp"
+            android:layout_marginBottom="24dp" />
+
+    </LinearLayout>
+
+</ScrollView>

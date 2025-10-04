@@ -99,6 +99,7 @@
 - [x] 3.2 实现permission-coroutine扩展模块
 
 
+
   - 创建suspend fun PermissionRequest.await()
   - 实现Flow<PermissionState>权限状态监听
   - 添加协程友好的API设计
@@ -132,11 +133,14 @@
 
 - [ ] 4.1 实现自定义主题和UI支持
   - 在RationaleHandler中暴露themeResId参数
+
   - 支持自定义DialogFragment/BottomSheet
   - 添加UI组件的可替换性
   - _需求: 8.3_
 
 - [ ] 4.2 创建全局配置系统
+
+
   - 实现默认解释文案配置
   - 添加多语言支持（i18n）
   - 支持全局默认设置

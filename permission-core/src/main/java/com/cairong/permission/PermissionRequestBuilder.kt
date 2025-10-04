@@ -260,9 +260,9 @@ class PermissionRequestBuilder internal constructor(
         )
         
         val executor = if (activity != null) {
-            PermissionRequestExecutor(activity)
+            PermissionExecutorManager.getOrCreateExecutor(activity)
         } else if (fragment != null) {
-            PermissionRequestExecutor(fragment)
+            PermissionExecutorManager.getOrCreateExecutor(fragment)
         } else {
             throw IllegalStateException("No activity or fragment provided")
         }

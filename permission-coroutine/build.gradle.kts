@@ -2,6 +2,7 @@ plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
     id("maven-publish")
+    id("org.jetbrains.dokka")
 }
 
 android {
@@ -61,6 +62,33 @@ dependencies {
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
 }
 
+// Dokka 配置
+tasks.dokkaHtml.configure {
+    outputDirectory.set(buildDir.resolve("dokka"))
+    
+    dokkaSourceSets {
+        named("main") {
+            moduleName.set("Permission Coroutine")
+            moduleVersion.set("1.0.0")
+            
+            includes.from("Module.md")
+            
+            sourceLink {
+                localDirectory.set(file("src/main/java"))
+                remoteUrl.set(uri("https://github.com/cairong/android-permission-framework/tree/main/permission-coroutine/src/main/java").toURL())
+                remoteLineSuffix.set("#L")
+            }
+        }
+    }
+}
+
+// 生成 Dokka JAR
+val dokkaJar by tasks.registering(Jar::class) {
+    dependsOn(tasks.dokkaHtml)
+    from(tasks.dokkaHtml.flatMap { it.outputDirectory })
+    archiveClassifier.set("javadoc")
+}
+
 publishing {
     publications {
         register<MavenPublication>("release") {
@@ -70,6 +98,36 @@ publishing {
             
             afterEvaluate {
                 from(components["release"])
+            }
+            
+            // 添加文档 JAR
+            artifact(dokkaJar)
+            
+            pom {
+                name.set("Android Permission Framework Coroutine Extension")
+                description.set("Kotlin Coroutine extensions for Android Permission Framework")
+                url.set("https://github.com/cairong/android-permission-framework")
+                
+                licenses {
+                    license {
+                        name.set("The Apache License, Version 2.0")
+                        url.set("http://www.apache.org/licenses/LICENSE-2.0.txt")
+                    }
+                }
+                
+                developers {
+                    developer {
+                        id.set("cairong")
+                        name.set("CaiRong")
+                        email.set("cairong@example.com")
+                    }
+                }
+                
+                scm {
+                    connection.set("scm:git:git://github.com/cairong/android-permission-framework.git")
+                    developerConnection.set("scm:git:ssh://github.com:cairong/android-permission-framework.git")
+                    url.set("https://github.com/cairong/android-permission-framework/tree/main")
+                }
             }
         }
     }

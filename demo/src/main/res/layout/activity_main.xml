@@ -42,4 +42,32 @@
         android:text="@string/btn_java_demo"
         android:layout_marginBottom="16dp" />
 
+    <Button
+        android:id="@+id/btnCustomUIDemo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="自定义UI演示"
+        android:layout_marginBottom="16dp" />
+
+    <Button
+        android:id="@+id/btnInterceptorDemo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="拦截器演示"
+        android:layout_marginBottom="16dp" />
+
+    <Button
+        android:id="@+id/btnPermissionGroupDemo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="权限组批量申请演示"
+        android:layout_marginBottom="16dp" />
+
+    <Button
+        android:id="@+id/btnAndroid14Demo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Android 14+ 权限适配演示"
+        android:layout_marginBottom="16dp" />
+
 </LinearLayout>

@@ -38,5 +38,21 @@ class MainActivity : AppCompatActivity() {
         binding.btnJavaDemo.setOnClickListener {
             startActivity(Intent(this, JavaDemoActivity::class.java))
         }
+        
+        binding.btnCustomUIDemo.setOnClickListener {
+            startActivity(Intent(this, CustomUIDemoActivity::class.java))
+        }
+        
+        binding.btnInterceptorDemo.setOnClickListener {
+            startActivity(Intent(this, InterceptorDemoActivity::class.java))
+        }
+        
+        binding.btnPermissionGroupDemo.setOnClickListener {
+            startActivity(Intent(this, PermissionGroupDemoActivity::class.java))
+        }
+        
+        binding.btnAndroid14Demo.setOnClickListener {
+            startActivity(Intent(this, Android14DemoActivity::class.java))
+        }
     }
 }

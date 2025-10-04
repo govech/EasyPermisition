@@ -33,6 +33,9 @@ class CoroutineDemoActivity : AppCompatActivity() {
         binding = ActivityCoroutineDemoBinding.inflate(layoutInflater)
         setContentView(binding.root)
         
+        // 初始化权限管理器
+        PermissionManager.initialize(this)
+        
         setupClickListeners()
         observePermissionStates()
     }

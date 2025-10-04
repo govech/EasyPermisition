@@ -41,6 +41,9 @@ class CameraActivity : AppCompatActivity() {
         binding = ActivityCameraBinding.inflate(layoutInflater)
         setContentView(binding.root)
         
+        // 初始化权限管理器
+        PermissionManager.initialize(this)
+        
         cameraExecutor = Executors.newSingleThreadExecutor()
         
         setupClickListeners()

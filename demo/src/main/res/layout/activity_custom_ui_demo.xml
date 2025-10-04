@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="自定义UI和配置演示"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:layout_marginBottom="24dp" />
+
+    <TextView
+        android:id="@+id/tvStatus"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="自定义UI和配置演示\n点击按钮测试不同的自定义功能"
+        android:textSize="14sp"
+        android:gravity="center"
+        android:layout_marginBottom="16dp"
+        android:minHeight="120dp"
+        android:background="@android:color/background_light"
+        android:padding="16dp" />
+
+    <Button
+        android:id="@+id/btnCustomTheme"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="自定义主题演示"
+        android:layout_marginBottom="12dp" />
+
+    <Button
+        android:id="@+id/btnCustomRationale"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="自定义权限解释UI"
+        android:layout_marginBottom="12dp" />
+
+    <Button
+        android:id="@+id/btnGlobalConfig"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="全局配置演示"
+        android:layout_marginBottom="12dp" />
+
+    <Button
+        android:id="@+id/btnMultiLanguage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="多语言支持演示"
+        android:layout_marginBottom="12dp" />
+
+    <Button
+        android:id="@+id/btnResetConfig"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="重置配置"
+        android:layout_marginBottom="12dp" />
+
+</LinearLayout>
