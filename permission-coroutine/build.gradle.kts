@@ -64,7 +64,7 @@ dependencies {
 
 // Dokka 配置
 tasks.dokkaHtml.configure {
-    outputDirectory.set(buildDir.resolve("dokka"))
+    outputDirectory.set(layout.buildDirectory.dir("dokka"))
     
     dokkaSourceSets {
         named("main") {
@@ -75,7 +75,7 @@ tasks.dokkaHtml.configure {
             
             sourceLink {
                 localDirectory.set(file("src/main/java"))
-                remoteUrl.set(uri("https://github.com/cairong/android-permission-framework/tree/main/permission-coroutine/src/main/java").toURL())
+                remoteUrl.set(uri("https://github.com/govech/EasyPermisition/blob/main/permission-coroutine/src/main/java").toURL())
                 remoteLineSuffix.set("#L")
             }
         }
@@ -89,45 +89,12 @@ val dokkaJar by tasks.registering(Jar::class) {
     archiveClassifier.set("javadoc")
 }
 
+// JitPack 发布配置
 publishing {
     publications {
         register<MavenPublication>("release") {
-            groupId = "com.github.cairong"
-            artifactId = "permission-coroutine"
-            version = project.version.toString()
-            
             afterEvaluate {
                 from(components["release"])
-            }
-            
-            // 添加文档 JAR
-            artifact(dokkaJar)
-            
-            pom {
-                name.set("Android Permission Framework Coroutine Extension")
-                description.set("Kotlin Coroutine extensions for Android Permission Framework")
-                url.set("https://github.com/cairong/android-permission-framework")
-                
-                licenses {
-                    license {
-                        name.set("The Apache License, Version 2.0")
-                        url.set("http://www.apache.org/licenses/LICENSE-2.0.txt")
-                    }
-                }
-                
-                developers {
-                    developer {
-                        id.set("cairong")
-                        name.set("CaiRong")
-                        email.set("cairong@example.com")
-                    }
-                }
-                
-                scm {
-                    connection.set("scm:git:git://github.com/cairong/android-permission-framework.git")
-                    developerConnection.set("scm:git:ssh://github.com:cairong/android-permission-framework.git")
-                    url.set("https://github.com/cairong/android-permission-framework/tree/main")
-                }
             }
         }
     }

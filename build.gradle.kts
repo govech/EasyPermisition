@@ -6,6 +6,6 @@ plugins {
 }
 
 allprojects {
-    group = "com.github.cairong"
+    group = "com.github.govech"
     version = "1.0.0"
 }

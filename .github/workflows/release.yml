@@ -110,4 +110,4 @@ jobs:
     - name: Publish to JitPack
       run: |
         echo "JitPack will automatically build from this tag"
-        echo "Repository: https://jitpack.io/#cairong/android-permission-framework/${{ steps.get_version.outputs.VERSION }}"
+        echo "Repository: https://jitpack.io/#govech/EasyPermisition/${{ steps.get_version.outputs.VERSION }}"

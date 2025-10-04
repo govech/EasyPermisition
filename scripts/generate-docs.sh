@@ -82,8 +82,8 @@ cat > docs/index.html << EOF
     
     <div class="section">
         <h2>🔗 相关链接</h2>
-        <a href="https://github.com/cairong/android-permission-framework" class="link">GitHub 仓库</a>
-        <a href="https://github.com/cairong/android-permission-framework/issues" class="link">问题反馈</a>
+        <a href="https://github.com/govech/EasyPermisition" class="link">GitHub 仓库</a>
+        <a href="https://github.com/govech/EasyPermisition/issues" class="link">问题反馈</a>
     </div>
 </body>
 </html>

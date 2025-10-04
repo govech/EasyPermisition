@@ -52,10 +52,10 @@ allprojects {
 ```gradle
 dependencies {
     // 核心库（必需）
-    implementation 'com.github.cairong.android-permission-framework:permission-core:1.0.0'
+    implementation 'com.github.govech:EasyPermisition:1.0.0'
     
     // 协程扩展（可选）
-    implementation 'com.github.cairong.android-permission-framework:permission-coroutine:1.0.0'
+    implementation 'com.github.govech.EasyPermisition:permission-coroutine:1.0.0'
 }
 ```
 
@@ -423,4 +423,4 @@ limitations under the License.
 
 - 作者：CaiRong
 - 邮箱：cairong@example.com
-- 项目地址：[https://github.com/cairong/android-permission-framework](https://github.com/cairong/android-permission-framework)
+- 项目地址：[https://github.com/govech/EasyPermisition](https://github.com/govech/EasyPermisition)
