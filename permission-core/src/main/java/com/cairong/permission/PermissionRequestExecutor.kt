@@ -9,6 +9,12 @@ import com.cairong.permission.config.PermissionConfig
 import com.cairong.permission.interceptor.PermissionInterceptorRegistry
 import com.cairong.permission.ratelimit.GlobalPermissionRateLimiter
 import com.cairong.permission.exceptions.PermissionRateLimitException
+import com.cairong.permission.memory.MemoryLeakDetector
+import com.cairong.permission.memory.memorySafe
+import com.cairong.permission.performance.PerformanceMonitor
+import com.cairong.permission.analytics.PermissionAnalytics
+import com.cairong.permission.circuit.CircuitBreakerManager
+import androidx.lifecycle.LifecycleOwner
 
 /**
  * 权限请求执行器
@@ -131,10 +137,59 @@ class PermissionRequestExecutor {
     fun execute(request: PermissionRequest) {
         this.currentRequest = request
         
+        // 开始性能监控
+        val requestId = "permission_request_${System.currentTimeMillis()}"
+        PerformanceMonitor.startMeasurement("permission_request_total")
+        
+        // 获取分析器实例
+        val analytics = PermissionAnalytics.getInstance(context)
+        
+        // 获取熔断器
+        val lifecycleOwner = (activity ?: fragment) as? androidx.lifecycle.LifecycleOwner
+        val circuitBreaker = lifecycleOwner?.let { owner ->
+            CircuitBreakerManager.getOrCreateCircuitBreaker(
+                key = "executor_${hashCode()}",
+                lifecycleOwner = owner,
+                timeoutMs = 30000L
+            )
+        }
+        
+        // 检查熔断器状态
+        if (circuitBreaker?.isDestroyed() == true) {
+            analytics.recordTimeout(request.permissions, 0)
+            return
+        }
+        
+        // 开始请求（设置超时和取消回调）
+        val requestStarted = circuitBreaker?.startRequest(
+            requestId = requestId,
+            onTimeout = {
+                analytics.recordTimeout(request.permissions, 30000L)
+                PerformanceMonitor.endMeasurement("permission_request_total")
+                // 超时处理
+                request.callback?.memorySafe { context }?.execute {
+                    onDenied(request.permissions, emptyArray())
+                }
+            },
+            onCancel = {
+                analytics.recordTimeout(request.permissions, 0)
+                PerformanceMonitor.endMeasurement("permission_request_total")
+            }
+        ) ?: true
+        
+        if (!requestStarted) {
+            return
+        }
+        
         try {
+            // 记录请求开始
+            analytics.recordRequestStart(request.permissions)
+            
             // 执行拦截器前置检查
             if (!PermissionInterceptorRegistry.executeBeforeRequest(request)) {
                 // 被拦截器拦截，不执行权限请求
+                circuitBreaker?.completeRequest(requestId)
+                PerformanceMonitor.endMeasurement("permission_request_total")
                 return
             }
             
@@ -147,6 +202,8 @@ class PermissionRequestExecutor {
                 // 有权限被频率限制阻止
                 val exception = PermissionRateLimitException("权限请求被频率限制阻止: ${blockedPermissions.joinToString()}")
                 PermissionInterceptorRegistry.executeOnError(request, exception)
+                circuitBreaker?.completeRequest(requestId)
+                PerformanceMonitor.endMeasurement("permission_request_total")
                 return
             }
             
@@ -155,8 +212,10 @@ class PermissionRequestExecutor {
                 GlobalPermissionRateLimiter.recordRequest(permission)
             }
             
-            // 调用请求前回调
-            request.callback?.onBeforeRequest(request.permissions)
+            // 调用请求前回调（使用内存安全包装）
+            request.callback?.memorySafe { context }?.execute {
+                onBeforeRequest(request.permissions)
+            }
             
             // 检查权限状态
             val permissionStates = if (fragment != null) {
@@ -271,8 +330,28 @@ class PermissionRequestExecutor {
         val request = currentRequest ?: return
         val permission = request.singlePermission
         
+        // 结束性能监控
+        PerformanceMonitor.endMeasurement("permission_request_total")
+        
+        // 获取分析器和熔断器
+        val analytics = PermissionAnalytics.getInstance(context)
+        val requestTime = PerformanceMonitor.getMetric("permission_request_total")?.avgTime ?: 0L
+        
+        // 完成熔断器请求
+        val lifecycleOwner = (activity ?: fragment) as? androidx.lifecycle.LifecycleOwner
+        lifecycleOwner?.let { owner ->
+            CircuitBreakerManager.getOrCreateCircuitBreaker(
+                key = "executor_${hashCode()}",
+                lifecycleOwner = owner
+            ).completeRequest("permission_request_${System.currentTimeMillis()}")
+        }
+        
         if (isGranted) {
-            request.callback?.onGranted(arrayOf(permission))
+            analytics.recordGranted(arrayOf(permission), requestTime)
+            request.callback?.memorySafe { context }?.execute {
+                onGranted(arrayOf(permission))
+            }
+            PermissionInterceptorRegistry.executeOnGranted(request, arrayOf(permission))
         } else {
             // 检查是否被永久拒绝
             val state = if (fragment != null) {
@@ -282,9 +361,14 @@ class PermissionRequestExecutor {
             }
             
             if (state == PermissionState.PERMANENTLY_DENIED) {
+                analytics.recordPermanentlyDenied(arrayOf(permission), requestTime)
                 handlePermanentlyDenied(arrayOf(permission), emptyArray())
             } else {
-                request.callback?.onDenied(arrayOf(permission), emptyArray())
+                analytics.recordDenied(arrayOf(permission), requestTime)
+                request.callback?.memorySafe { context }?.execute {
+                    onDenied(arrayOf(permission), emptyArray())
+                }
+                PermissionInterceptorRegistry.executeOnDenied(request, arrayOf(permission), emptyArray())
             }
         }
     }
@@ -294,6 +378,22 @@ class PermissionRequestExecutor {
      */
     private fun handleMultiplePermissionsResult(permissions: Map<String, Boolean>) {
         val request = currentRequest ?: return
+        
+        // 结束性能监控
+        PerformanceMonitor.endMeasurement("permission_request_total")
+        
+        // 获取分析器和熔断器
+        val analytics = PermissionAnalytics.getInstance(context)
+        val requestTime = PerformanceMonitor.getMetric("permission_request_total")?.avgTime ?: 0L
+        
+        // 完成熔断器请求
+        val lifecycleOwner = (activity ?: fragment) as? androidx.lifecycle.LifecycleOwner
+        lifecycleOwner?.let { owner ->
+            CircuitBreakerManager.getOrCreateCircuitBreaker(
+                key = "executor_${hashCode()}",
+                lifecycleOwner = owner
+            ).completeRequest("permission_request_${System.currentTimeMillis()}")
+        }
         
         // 使用结果聚合器处理多权限结果
         val aggregator = PermissionResultAggregator()
@@ -305,17 +405,30 @@ class PermissionRequestExecutor {
         
         if (aggregatedResult.allGranted) {
             // 所有权限都已授权
-            request.callback?.onGranted(aggregatedResult.grantedPermissions)
+            analytics.recordGranted(aggregatedResult.grantedPermissions, requestTime)
+            request.callback?.memorySafe { context }?.execute {
+                onGranted(aggregatedResult.grantedPermissions)
+            }
+            PermissionInterceptorRegistry.executeOnGranted(request, aggregatedResult.grantedPermissions)
         } else {
             // 有权限被拒绝
             if (aggregatedResult.hasPermanentlyDeniedPermissions) {
+                analytics.recordPermanentlyDenied(aggregatedResult.permanentlyDeniedPermissions, requestTime)
+                if (aggregatedResult.temporarilyDeniedPermissions.isNotEmpty()) {
+                    analytics.recordDenied(aggregatedResult.temporarilyDeniedPermissions, requestTime)
+                }
                 handlePermanentlyDenied(
                     aggregatedResult.permanentlyDeniedPermissions,
                     aggregatedResult.temporarilyDeniedPermissions
                 )
             } else {
-                request.callback?.onDenied(
-                    aggregatedResult.temporarilyDeniedPermissions,
+                analytics.recordDenied(aggregatedResult.temporarilyDeniedPermissions, requestTime)
+                request.callback?.memorySafe { context }?.execute {
+                    onDenied(aggregatedResult.temporarilyDeniedPermissions, emptyArray())
+                }
+                PermissionInterceptorRegistry.executeOnDenied(
+                    request, 
+                    aggregatedResult.temporarilyDeniedPermissions, 
                     emptyArray()
                 )
             }

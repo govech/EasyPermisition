@@ -63,5 +63,60 @@
     *;
 }
 
+# 保留性能监控相关类
+-keep public class com.cairong.permission.performance.PerformanceMonitor {
+    public *;
+}
+
+-keep public class com.cairong.permission.performance.PerformanceMonitor$* {
+    *;
+}
+
+# 保留分析统计相关类
+-keep public class com.cairong.permission.analytics.PermissionAnalytics {
+    public *;
+}
+
+-keep public class com.cairong.permission.analytics.PermissionAnalytics$* {
+    *;
+}
+
+# 保留兼容性检查相关类
+-keep public class com.cairong.permission.compatibility.CompatibilityChecker {
+    public *;
+}
+
+-keep public class com.cairong.permission.compatibility.CompatibilityChecker$* {
+    *;
+}
+
+# 保留内存检测相关类
+-keep public class com.cairong.permission.memory.MemoryLeakDetector {
+    public *;
+}
+
+# 保留熔断器相关类
+-keep public class com.cairong.permission.circuit.PermissionCircuitBreaker {
+    public *;
+}
+
+-keep public class com.cairong.permission.circuit.CircuitBreakerManager {
+    public *;
+}
+
+# 保留注解
+-keep @interface com.cairong.permission.performance.Measured
+
+# 保留枚举类
+-keepclassmembers enum com.cairong.permission.analytics.PermissionAnalytics$EventType {
+    public static **[] values();
+    public static ** valueOf(java.lang.String);
+}
+
+-keepclassmembers enum com.cairong.permission.compatibility.CompatibilityChecker$PermissionFeature {
+    public static **[] values();
+    public static ** valueOf(java.lang.String);
+}
+
 # 避免警告
 -dontwarn com.cairong.permission.**
