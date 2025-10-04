@@ -52,9 +52,14 @@ object PermissionStateChecker {
         // 对于Activity，检查是否应该显示权限解释
         if (context is ComponentActivity) {
             return if (ActivityCompat.shouldShowRequestPermissionRationale(context, permission)) {
+                // 用户之前拒绝过权限，但没有选择"不再询问"
                 PermissionState.DENIED
             } else {
-                PermissionState.PERMANENTLY_DENIED
+                // 这里需要区分两种情况：
+                // 1. 第一次请求权限（应该返回 DENIED）
+                // 2. 用户选择了"不再询问"（应该返回 PERMANENTLY_DENIED）
+                // 由于无法直接区分，我们在权限请求流程中处理这个逻辑
+                PermissionState.DENIED
             }
         }
         
@@ -80,9 +85,14 @@ object PermissionStateChecker {
         
         // 检查是否应该显示权限解释
         return if (fragment.shouldShowRequestPermissionRationale(permission)) {
+            // 用户之前拒绝过权限，但没有选择"不再询问"
             PermissionState.DENIED
         } else {
-            PermissionState.PERMANENTLY_DENIED
+            // 这里需要区分两种情况：
+            // 1. 第一次请求权限（应该返回 DENIED）
+            // 2. 用户选择了"不再询问"（应该返回 PERMANENTLY_DENIED）
+            // 由于无法直接区分，我们在权限请求流程中处理这个逻辑
+            PermissionState.DENIED
         }
     }
     

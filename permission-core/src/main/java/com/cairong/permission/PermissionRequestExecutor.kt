@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.activity.ComponentActivity
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import com.cairong.permission.config.PermissionConfig
 import com.cairong.permission.interceptor.PermissionInterceptorRegistry
@@ -253,41 +254,8 @@ class PermissionRequestExecutor {
             }
         } catch (e: Exception) {
             PermissionInterceptorRegistry.executeOnError(request, e)
-        }
-        
-        // 检查权限状态
-        val permissionStates = if (fragment != null) {
-            PermissionStateChecker.checkPermissionsState(fragment, request.permissions)
-        } else {
-            PermissionStateChecker.checkPermissionsState(context, request.permissions)
-        }
-        
-        val grantedPermissions = permissionStates.filter { it.value == PermissionState.GRANTED }.keys.toTypedArray()
-        val deniedPermissions = permissionStates.filter { it.value == PermissionState.DENIED }.keys.toTypedArray()
-        val permanentlyDeniedPermissions = permissionStates.filter { it.value == PermissionState.PERMANENTLY_DENIED }.keys.toTypedArray()
-        
-        // 如果所有权限都已授权，直接回调成功
-        if (grantedPermissions.size == request.permissions.size) {
-            request.callback?.onGranted(grantedPermissions)
-            PermissionInterceptorRegistry.executeOnGranted(request, grantedPermissions)
-            return
-        }
-        
-        // 如果有永久拒绝的权限，处理永久拒绝逻辑
-        if (permanentlyDeniedPermissions.isNotEmpty()) {
-            handlePermanentlyDenied(permanentlyDeniedPermissions, deniedPermissions)
-            return
-        }
-        
-        // 如果有需要解释的权限，显示解释
-        if (deniedPermissions.isNotEmpty() && request.rationale != null) {
-            showRationale(request) {
-                // 用户选择继续请求权限
-                requestPermissions(deniedPermissions)
-            }
-        } else {
-            // 直接请求权限
-            requestPermissions(deniedPermissions)
+            circuitBreaker?.completeRequest(requestId)
+            PerformanceMonitor.endMeasurement("permission_request_total")
         }
     }
     
@@ -353,14 +321,16 @@ class PermissionRequestExecutor {
             }
             PermissionInterceptorRegistry.executeOnGranted(request, arrayOf(permission))
         } else {
-            // 检查是否被永久拒绝
-            val state = if (fragment != null) {
-                PermissionStateChecker.checkPermissionState(fragment, permission)
+            // 权限被拒绝，检查是否被永久拒绝
+            val isPermanentlyDenied = if (fragment != null) {
+                !fragment.shouldShowRequestPermissionRationale(permission)
+            } else if (context is ComponentActivity) {
+                !ActivityCompat.shouldShowRequestPermissionRationale(context, permission)
             } else {
-                PermissionStateChecker.checkPermissionState(context, permission)
+                false
             }
             
-            if (state == PermissionState.PERMANENTLY_DENIED) {
+            if (isPermanentlyDenied) {
                 analytics.recordPermanentlyDenied(arrayOf(permission), requestTime)
                 handlePermanentlyDenied(arrayOf(permission), emptyArray())
             } else {
