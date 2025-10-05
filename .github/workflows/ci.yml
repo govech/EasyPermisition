@@ -59,8 +59,16 @@ jobs:
 
       # 构建 Library AAR（如果有 library 模块）
       - name: Build Library AAR
-        run: ./gradlew assembleRelease \:permission-core:assembleRelease \:permission-coroutine:assembleRelease
+        run: ./gradlew assembleRelease :permission-core:assembleRelease :permission-coroutine:assembleRelease
         continue-on-error: true
+
+      # ---------- 2. 生成版本号 ----------
+      - name: create_version
+        id: get_version
+        run: |
+          VERSION="$(date +%Y%m%d).${{ github.run_number }}"
+          echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+          echo "本次构建版本 => $VERSION"
 
       - name: Generate performance report
         run: |
@@ -115,20 +123,22 @@ jobs:
             echo "No keystore secret found, skipping..."
           fi
 
-      # 构建 Release APK + AAR（可选签名）
+      # 构建 Release APK + AAR（已修复签名 & fi）
       - name: Build Release APK + AAR
         run: |
-          MODULE_TASKS="assembleRelease :permission-core:assembleRelease :permission-coroutine:assembleRelease"
-
           if [ -f release.jks ]; then
             echo "Signing Release APK with keystore..."
-            ./gradlew $MODULE_TASKS \-Pandroid.injected.signing.store.file=release.jks \-Pandroid.injected.signing.store.password=${{ secrets.KEYSTORE_PASSWORD }} \-Pandroid.injected.signing.key.alias=${{ secrets.KEY_ALIAS }} \-Pandroid.injected.signing.key.password=${{ secrets.KEY_PASSWORD }}
+            ./gradlew assembleRelease \
+              -PRELEASE_STORE_FILE=release.jks \
+              -PRELEASE_STORE_PASSWORD=${{ secrets.KEYSTORE_PASSWORD }} \
+              -PRELEASE_KEY_ALIAS=${{ secrets.KEY_ALIAS }} \
+              -PRELEASE_KEY_PASSWORD=${{ secrets.KEY_PASSWORD }}
           else
             echo "No keystore found, building unsigned release..."
-            ./gradlew $MODULE_TASKS
+            ./gradlew assembleRelease
+          fi
 
-
-      # 上传 Release APK/AAR 到 GitHub Release
+      # 上传 Release
       - name: Publish GitHub Release
         uses: softprops/action-gh-release@v2
         with:
@@ -136,9 +146,12 @@ jobs:
           tag_name: ${{ github.ref_name }}
           body: |
             🚀 自动发布版本：**${{ github.ref_name }}**
+            - 构建号: $(date +%Y%m%d).${{ github.run_number }}
             - 来源分支: ${{ github.ref_name }}
             - 构建时间: ${{ github.run_started_at }}
-          files: build-artifacts/**/*.{apk,aar}
+          files: |
+            build-artifacts/**/*.apk
+            build-artifacts/**/*.aar
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
