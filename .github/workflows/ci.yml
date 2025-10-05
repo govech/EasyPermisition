@@ -126,16 +126,17 @@ jobs:
       # 构建 Release APK + AAR（已修复签名 & fi）
       - name: Build Release APK + AAR
         run: |
+          chmod +x ./gradlew 
           if [ -f release.jks ]; then
             echo "Signing Release APK with keystore..."
-            ./gradlew assembleRelease \
+            ./gradlew assembleRelease :permission-core:assembleRelease :permission-coroutine:assembleRelease\
               -PRELEASE_STORE_FILE=release.jks \
               -PRELEASE_STORE_PASSWORD=${{ secrets.KEYSTORE_PASSWORD }} \
               -PRELEASE_KEY_ALIAS=${{ secrets.KEY_ALIAS }} \
               -PRELEASE_KEY_PASSWORD=${{ secrets.KEY_PASSWORD }}
           else
             echo "No keystore found, building unsigned release..."
-            ./gradlew assembleRelease
+            ./gradlew assembleRelease :permission-core:assembleRelease :permission-coroutine:assembleRelease
           fi
 
       # 上传 Release
