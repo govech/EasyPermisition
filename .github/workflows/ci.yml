@@ -146,10 +146,8 @@ jobs:
           name: "Release ${{ github.ref_name }}"
           tag_name: ${{ github.ref_name }}
           body: |
-            🚀 自动发布版本：**${{ github.ref_name }}**
-            - 构建号: $(date +%Y%m%d).${{ github.run_number }}
-            - 来源分支: ${{ github.ref_name }}
-            - 构建时间: ${{ github.run_started_at }}
+            ### 修复
+            - 修复CI/CD报错问题
           files: |
             build-artifacts/**/*.apk
             build-artifacts/**/*.aar
