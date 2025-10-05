@@ -3,6 +3,10 @@ plugins {
     id("org.jetbrains.kotlin.android")
 }
 
+// 发布到 JitPack 所需的配置
+group = "com.github.govech"
+version = "1.0.0"
+
 android {
     namespace = "com.cairong.permission.demo"
     compileSdk = 34

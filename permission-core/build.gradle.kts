@@ -5,6 +5,10 @@ plugins {
     id("org.jetbrains.dokka")
 }
 
+// 发布到 JitPack 所需的配置
+group = "com.github.govech"
+version = "1.0.0"
+
 android {
     namespace = "com.cairong.permission"
     compileSdk = 34

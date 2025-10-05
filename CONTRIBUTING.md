@@ -50,8 +50,6 @@ cd android-permission-framework
 # 运行集成测试
 ./gradlew connectedAndroidTest
 
-# 生成测试覆盖率报告
-./gradlew jacocoTestReport
 ```
 
 ## 🎨 代码风格
