@@ -52,54 +52,47 @@ allprojects {
 ```gradle
 dependencies {
     // 核心库（必需）
-    implementation 'com.github.govech:EasyPermisition:1.0.0'
+    implementation 'com.github.govech:EasyPermisition:v1.0.0'
     
     // 协程扩展（可选）
-    implementation 'com.github.govech.EasyPermisition:permission-coroutine:1.0.0'
+    implementation 'com.github.govech.MyPermisition:permission-coroutine:v1.0.0'
 }
 ```
 
 ### Kotlin 三行代码
 
 ```kotlin
-PermissionRequest.Builder(this)
-    .permissions(Manifest.permission.CAMERA)
-    .callback { showToast("相机权限已授权") }
-    .build()
+PermissionManager.with(this)
+    .permission(Manifest.permission.CAMERA)
+    .onGranted { showToast("相机权限已授权") }
     .request()
 ```
 
 ### 完整示例
 
 ```kotlin
-PermissionRequest.Builder(this)
+PermissionManager.with(this)
     .permissions(
         Manifest.permission.CAMERA,
         Manifest.permission.RECORD_AUDIO
     )
     .rationale("需要相机和麦克风权限来录制视频")
-    .callback(object : PermissionCallback {
-        override fun onGranted() {
-            // 所有权限已授权
-            startCamera()
-        }
-        
-        override fun onDenied(deniedPermissions: List<String>) {
-            // 部分权限被拒绝
-            showToast("权限被拒绝：${deniedPermissions.joinToString()}")
-        }
-        
-        override fun onPermanentlyDenied(permanentlyDeniedPermissions: List<String>) {
-            // 权限被永久拒绝，引导用户到设置页面
-            showToast("权限被永久拒绝，请到设置页面手动开启")
-        }
-        
-        override fun onBeforeRequest() {
-            // 权限请求前的回调
-            showLoading()
-        }
-    })
-    .build()
+    .onBeforeRequest { permissions ->
+        // 权限请求前的回调
+        showLoading()
+    }
+    .onGranted { permissions ->
+        // 所有权限已授权
+        startCamera()
+    }
+    .onDenied { deniedPermissions, permanentlyDeniedPermissions ->
+        // 部分权限被拒绝
+        showToast("权限被拒绝：${deniedPermissions.joinToString()}")
+    }
+    .onPermanentlyDenied { permanentlyDeniedPermissions ->
+        // 权限被永久拒绝，引导用户到设置页面
+        showToast("权限被永久拒绝，请到设置页面手动开启")
+    }
     .request()
 ```
 
@@ -108,16 +101,20 @@ PermissionRequest.Builder(this)
 ### Java 调用
 
 ```java
-PermissionManager.with(this)
-    .permissions(Manifest.permission.CAMERA)
+JavaPermissionManager.with(this)
+    .permission(Manifest.permission.CAMERA)
     .rationale("需要相机权限来拍照")
-    .onGranted(() -> {
-        // 权限已授权
-        startCamera();
-    })
-    .onDenied(deniedPermissions -> {
-        // 权限被拒绝
-        showToast("权限被拒绝");
+    .onJavaResult(new SimpleJavaPermissionCallback() {
+        @Override
+        public void onResult(boolean allGranted, String[] grantedPermissions, String[] deniedPermissions) {
+            if (allGranted) {
+                // 权限已授权
+                startCamera();
+            } else {
+                // 权限被拒绝
+                showToast("权限被拒绝");
+            }
+        }
     })
     .request();
 ```
@@ -126,18 +123,27 @@ PermissionManager.with(this)
 
 ```kotlin
 // 添加 permission-coroutine 依赖
-try {
-    val result = PermissionRequest.Builder(this)
-        .permissions(Manifest.permission.CAMERA)
-        .rationale("需要相机权限")
-        .build()
-        .await()
-    
-    if (result.isGranted) {
-        startCamera()
-    }
-} catch (e: PermissionDeniedException) {
+val granted = PermissionManager.with(this)
+    .permission(Manifest.permission.CAMERA)
+    .rationale("需要相机权限")
+    .await()
+
+if (granted) {
+    startCamera()
+} else {
     showToast("权限被拒绝")
+}
+
+// 或者获取详细结果
+val result = PermissionManager.with(this)
+    .permission(Manifest.permission.CAMERA)
+    .rationale("需要相机权限")
+    .awaitResult()
+
+if (result.allGranted) {
+    startCamera()
+} else {
+    showToast("权限被拒绝：${result.deniedPermissions.joinToString()}")
 }
 ```
 
@@ -145,15 +151,24 @@ try {
 
 ```kotlin
 // 使用预定义的权限组
-val storagePermissions = PermissionGroups.getStoragePermissions()
-val locationPermissions = PermissionGroups.getLocationPermissions()
-val mediaPermissions = PermissionGroups.getMediaPermissions() // Android 13+
-
-PermissionRequest.Builder(this)
-    .permissions(*storagePermissions.toTypedArray())
+PermissionManager.with(this)
+    .storagePermissions()
     .rationale("需要存储权限来保存文件")
-    .callback { /* 处理结果 */ }
-    .build()
+    .onGranted { /* 处理结果 */ }
+    .request()
+
+// 或者使用其他权限组
+PermissionManager.with(this)
+    .locationPermissions()
+    .rationale("需要位置权限来获取当前位置")
+    .onGranted { /* 处理结果 */ }
+    .request()
+
+// Android 13+ 媒体权限
+PermissionManager.with(this)
+    .mediaPermissions()
+    .rationale("需要媒体权限来访问照片")
+    .onGranted { /* 处理结果 */ }
     .request()
 ```
 
@@ -172,12 +187,11 @@ val customHandler = CustomRationaleHandler { context, permissions, rationale ->
         .show()
 }
 
-PermissionRequest.Builder(this)
-    .permissions(Manifest.permission.CAMERA)
+PermissionManager.with(this)
+    .permission(Manifest.permission.CAMERA)
     .rationale("需要相机权限")
     .rationaleHandler(customHandler)
-    .callback { /* 处理结果 */ }
-    .build()
+    .onGranted { /* 处理结果 */ }
     .request()
 ```
 
@@ -217,11 +231,10 @@ PermissionConfig.addInterceptor(object : PermissionInterceptor {
 ```kotlin
 // Android 14+ 支持用户选择部分媒体文件
 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-    PermissionRequest.Builder(this)
-        .permissions("android.permission.READ_MEDIA_VISUAL_USER_SELECTED")
+    PermissionManager.with(this)
+        .permission(("androi.permission.READ_MEDIA_VISUAL_USER_SELECTED")
         .rationale("选择您想要分享的照片")
-        .callback { /* 处理结果 */ }
-        .build()
+        .onGranted { /* 处理结果 */ }
         .request()
 }
 ```
@@ -231,11 +244,10 @@ if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
 ```kotlin
 // Android 13+ 需要显式请求通知权限
 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-    PermissionRequest.Builder(this)
-        .permissions(Manifest.permission.POST_NOTIFICATIONS)
+    PermissionManager.with(this)
+        .permission(Manifest.permission.POST_NOTIFICATIONS)
         .rationale("需要通知权限来发送重要消息")
-        .callback { /* 处理结果 */ }
-        .build()
+        .onGranted { /* 处理结果 */ }
         .request()
 }
 ```
@@ -245,14 +257,13 @@ if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
 ```kotlin
 // Android 14+ 前台服务需要特定类型权限
 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-    PermissionRequest.Builder(this)
+    PermissionManager.with(this)
         .permissions(
             "android.permission.FOREGROUND_SERVICE_LOCATION",
             "android.permission.FOREGROUND_SERVICE_CAMERA"
         )
         .rationale("需要前台服务权限来在后台提供服务")
-        .callback { /* 处理结果 */ }
-        .build()
+        .onGranted { /* 处理结果 */ }
         .request()
 }
 ```
@@ -304,24 +315,20 @@ A: Android 10+ 需要先获取前台位置权限，再单独请求后台位置�
 
 ```kotlin
 // 第一步：请求前台位置权限
-PermissionRequest.Builder(this)
-    .permissions(Manifest.permission.ACCESS_FINE_LOCATION)
-    .callback(object : PermissionCallback {
-        override fun onGranted() {
-            // 第二步：请求后台位置权限
-            requestBackgroundLocation()
-        }
-    })
-    .build()
+PermissionManager.with(this)
+    .permission(Manifest.permission.ACCESS_FINE_LOCATION)
+    .onGranted { permissions ->
+        // 第二步：请求后台位置权限
+        requestBackgroundLocation()
+    }
     .request()
 
 private fun requestBackgroundLocation() {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-        PermissionRequest.Builder(this)
-            .permissions(Manifest.permission.ACCESS_BACKGROUND_LOCATION)
+        PermissionManager.with(this)
+            .permission(Manifest.permission.ACCESS_BACKGROUND_LOCATION)
             .rationale("需要后台位置权限来持续定位")
-            .callback { /* 处理结果 */ }
-            .build()
+            .onGranted { /* 处理结果 */ }
             .request()
     }
 }
@@ -353,11 +360,10 @@ EasyPermissions.requestPermissions(
 )
 
 // 本框架 (新)
-PermissionRequest.Builder(this)
-    .permissions(Manifest.permission.CAMERA)
+PermissionManager.with(this)
+    .permission(Manifest.permission.CAMERA)
     .rationale("需要相机权限")
-    .callback { /* 处理结果 */ }
-    .build()
+    .onGranted { /* 处理结果 */ }
     .request()
 ```
 
@@ -374,10 +380,9 @@ class MainActivity : AppCompatActivity() {
 // 本框架 (新)
 class MainActivity : AppCompatActivity() {
     private fun requestCamera() {
-        PermissionRequest.Builder(this)
-            .permissions(Manifest.permission.CAMERA)
-            .callback { showCamera() }
-            .build()
+        PermissionManager.with(this)
+            .permission(Manifest.permission.CAMERA)
+            .onGranted { showCamera() }
             .request()
     }
 }
@@ -423,4 +428,4 @@ limitations under the License.
 
 - 作者：CaiRong
 - 邮箱：cairong@example.com
-- 项目地址：[https://github.com/govech/EasyPermisition](https://github.com/govech/EasyPermisition)
+- 项目地址：[https://github.com/govech/MyPermisition](https://github.com/govech/MyPermisition)
