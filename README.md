@@ -439,4 +439,4 @@ limitations under the License.
 
 - 作者：CaiRong
 - 邮箱：cairong@example.com
-- 项目地址：[https://github.com/govech/MyPermisition](https://github.com/govech/MyPermisition)
+- 项目地址：[https://github.com/govech/EasyPermisition](https://github.com/govech/EasyPermisition)
