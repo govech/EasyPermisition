@@ -199,12 +199,24 @@ PermissionManager.with(this)
 
 ```kotlin
 // 在 Application 中配置
-PermissionConfig.Builder()
-    .defaultRationale("应用需要此权限来正常工作")
-    .defaultSettingsText("去设置")
-    .forceGoToSettings(true)
-    .theme(R.style.CustomPermissionTheme)
-    .apply()
+class MyApplication : Application() {
+    override fun onCreate() {
+        super.onCreate()
+        
+        // 基础配置
+        PermissionConfig.defaultRationaleMessage = "应用需要此权限来正常工作"
+        PermissionConfig.defaultGoToSettingsText = "去设置"
+        PermissionConfig.forceGoToSettingsOnPermanentDenial = true
+        PermissionConfig.enableLogging = BuildConfig.DEBUG
+        
+        // 多语言配置
+        PermissionStrings.setLanguage("zh") // 中文
+        
+        // 性能配置
+        PermissionConfig.requestTimeout = 30_000L
+        PermissionConfig.rateLimitInterval = 5_000L
+    }
+}
 ```
 
 ### 权限拦截器
@@ -340,10 +352,9 @@ A: 框架内置频率限制机制，防止恶意频繁申请：
 
 ```kotlin
 // 配置频率限制（可选）
-PermissionConfig.Builder()
-    .rateLimitInterval(5000) // 5秒内最多请求一次
-    .rateLimitMaxAttempts(3) // 最多尝试3次
-    .apply()
+PermissionConfig.rateLimitInterval = 5_000L // 5秒内最多请求一次
+PermissionConfig.maxRequestsPerHour = 10 // 每小时最多10次
+PermissionConfig.requestTimeout = 30_000L // 30秒超时
 ```
 
 ## 🔄 迁移指南
